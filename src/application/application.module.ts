@@ -3,6 +3,7 @@ import { InfrastructureModule } from '@infrastructure/infrastructure.module';
 import { CreateUserUseCase } from '@application/users/use-cases/create-user.use-case';
 import { GetUsersUseCase } from '@application/users/use-cases/get-users.use-case';
 import { GetUserUseCase } from '@application/users/use-cases/get-user.use-case';
+import { GetUserTastesUseCase } from '@application/users/use-cases/get-user-tastes.use-case';
 import { UpdateUserUseCase } from '@application/users/use-cases/update-user.use-case';
 import { DeleteUserUseCase } from '@application/users/use-cases/delete-user.use-case';
 import { CreateGroupUseCase } from '@application/groups/use-cases/create-group.use-case';
@@ -21,6 +22,7 @@ import { RemoveUserTasteUseCase } from '@application/users/use-cases/remove-user
     CreateUserUseCase,
     GetUsersUseCase,
     GetUserUseCase,
+    GetUserTastesUseCase,
     UpdateUserUseCase,
     DeleteUserUseCase,
     CreateGroupUseCase,
@@ -37,6 +39,7 @@ import { RemoveUserTasteUseCase } from '@application/users/use-cases/remove-user
     CreateUserUseCase,
     GetUsersUseCase,
     GetUserUseCase,
+    GetUserTastesUseCase,
     UpdateUserUseCase,
     DeleteUserUseCase,
     CreateGroupUseCase,

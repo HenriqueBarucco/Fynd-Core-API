@@ -49,6 +49,16 @@ export class DrizzleUserTasteRepository implements UserTasteRepository {
     return row ? this.mapRow(row) : null;
   }
 
+  async findManyByUserId(userId: string): Promise<UserTaste[]> {
+    const rows = await this.db
+      .select()
+      .from(userTastes)
+      .where(eq(userTastes.userId, userId))
+      .orderBy(userTastes.createdAt);
+
+    return rows.map((row) => this.mapRow(row));
+  }
+
   async findByUserAndLabel(
     userId: string,
     normalizedLabel: string,

@@ -169,6 +169,42 @@
       }
     },
     "/v1/users/{id}/tastes": {
+      "get": {
+        "description": "Returns all tastes added by the given user.",
+        "operationId": "UserController_listTastes",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User tastes retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserTasteResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found."
+          }
+        },
+        "summary": "List user tastes",
+        "tags": [
+          "Users"
+        ]
+      },
       "post": {
         "description": "Generates an embedding for the provided taste and stores it for similarity searches.",
         "operationId": "UserController_addTaste",
@@ -480,34 +516,6 @@
           "updatedAt"
         ]
       },
-      "UpdateUserDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Updated name for the user."
-          },
-          "phone": {
-            "type": "string",
-            "description": "Updated phone number for the user."
-          }
-        }
-      },
-      "AddUserTasteDto": {
-        "type": "object",
-        "properties": {
-          "taste": {
-            "type": "string",
-            "description": "Short description of the taste/preference to associate with the user",
-            "example": "retro gaming coupons",
-            "minLength": 2,
-            "maxLength": 120
-          }
-        },
-        "required": [
-          "taste"
-        ]
-      },
       "UserTasteResponseDto": {
         "type": "object",
         "properties": {
@@ -542,6 +550,34 @@
           "embeddingModel",
           "createdAt",
           "updatedAt"
+        ]
+      },
+      "UpdateUserDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Updated name for the user."
+          },
+          "phone": {
+            "type": "string",
+            "description": "Updated phone number for the user."
+          }
+        }
+      },
+      "AddUserTasteDto": {
+        "type": "object",
+        "properties": {
+          "taste": {
+            "type": "string",
+            "description": "Short description of the taste/preference to associate with the user",
+            "example": "retro gaming coupons",
+            "minLength": 2,
+            "maxLength": 120
+          }
+        },
+        "required": [
+          "taste"
         ]
       },
       "CreateGroupDto": {

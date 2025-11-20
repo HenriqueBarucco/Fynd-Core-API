@@ -30,9 +30,7 @@ export class ReceiveMessageUseCase
       const promotion = await this.promotionService.extractPromotion(message);
 
       if (promotion) {
-        this.logger.log(
-          `Generated promotion for group ${group.id}: ${JSON.stringify(promotion)}`,
-        );
+        // const users = users that may be interested in this promotion
       } else {
         this.logger.log(`No promotion detected for group ${group.id}`);
       }

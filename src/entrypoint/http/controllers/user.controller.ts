@@ -24,6 +24,7 @@ import { GetUsersUseCase } from '@application/users/use-cases/get-users.use-case
 import { GetUserUseCase } from '@application/users/use-cases/get-user.use-case';
 import { UpdateUserUseCase } from '@application/users/use-cases/update-user.use-case';
 import { DeleteUserUseCase } from '@application/users/use-cases/delete-user.use-case';
+import { GetUserTastesUseCase } from '@application/users/use-cases/get-user-tastes.use-case';
 import { UserResponseDto } from '@entrypoint/http/dto/user-response.dto';
 import { CreateUserDto } from '@entrypoint/http/dto/create-user.dto';
 import { UpdateUserDto } from '@entrypoint/http/dto/update-user.dto';
@@ -40,6 +41,7 @@ export class UserController {
     private readonly createUserUseCase: CreateUserUseCase,
     private readonly getUsersUseCase: GetUsersUseCase,
     private readonly getUserUseCase: GetUserUseCase,
+    private readonly getUserTastesUseCase: GetUserTastesUseCase,
     private readonly updateUserUseCase: UpdateUserUseCase,
     private readonly deleteUserUseCase: DeleteUserUseCase,
     private readonly addUserTasteUseCase: AddUserTasteUseCase,
@@ -91,6 +93,29 @@ export class UserController {
     }
 
     return UserResponseDto.fromEntity(user);
+  }
+
+  @Get(':id/tastes')
+  @ApiOperation({
+    summary: 'List user tastes',
+    description: 'Returns all tastes added by the given user.',
+  })
+  @ApiOkResponse({
+    description: 'User tastes retrieved successfully.',
+    type: UserTasteResponseDto,
+    isArray: true,
+  })
+  @ApiNotFoundResponse({ description: 'User not found.' })
+  async listTastes(
+    @Param('id', UuidV8Pipe) id: string,
+  ): Promise<UserTasteResponseDto[]> {
+    const tastes = await this.getUserTastesUseCase.execute({ userId: id });
+
+    if (!tastes) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+
+    return tastes.map((taste) => UserTasteResponseDto.fromEntity(taste));
   }
 
   @Patch(':id')

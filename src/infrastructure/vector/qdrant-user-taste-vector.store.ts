@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import type { UserTasteVectorStore } from '@domain/users/services/user-taste-vector-store.interface';
 import type { UserTaste } from '@domain/users/entities/user-taste.entity';
 import { QdrantService } from '@infrastructure/vector/qdrant.service';
@@ -6,6 +6,7 @@ import { QdrantService } from '@infrastructure/vector/qdrant.service';
 @Injectable()
 export class QdrantUserTasteVectorStore implements UserTasteVectorStore {
   constructor(private readonly qdrantService: QdrantService) {}
+  private readonly logger = new Logger(QdrantUserTasteVectorStore.name);
 
   async upsert(taste: UserTaste, vector: number[]): Promise<void> {
     try {
@@ -22,7 +23,7 @@ export class QdrantUserTasteVectorStore implements UserTasteVectorStore {
         },
       ]);
     } catch (error) {
-      console.error('Error upserting user taste vector to Qdrant:', error);
+      this.logger.error('Error upserting user taste vector to Qdrant:', error);
       throw error;
     }
   }

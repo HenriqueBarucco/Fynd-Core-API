@@ -1,6 +1,6 @@
 import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
 import { GetUserUseCase } from '@application/use-cases/get-user.use-case';
-import { UserResponseDto } from '@presentation/http/dto/user-response.dto';
+import { UserResponseDto } from '@entrypoint/http/dto/user-response.dto';
 
 @Controller('users')
 export class UserController {

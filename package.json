@@ -21,8 +21,10 @@
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
+    "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
+    "easy-whatsapp-lib": "github:HenriqueBarucco/Easy-WhatsApp-Lib",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "winston": "^3.18.3"
@@ -69,7 +71,7 @@
       "^@domain/(.*)$": "<rootDir>/domain/$1",
       "^@application/(.*)$": "<rootDir>/application/$1",
       "^@infrastructure/(.*)$": "<rootDir>/infrastructure/$1",
-      "^@presentation/(.*)$": "<rootDir>/presentation/$1"
+      "^@entrypoint/(.*)$": "<rootDir>/entrypoint/$1"
     },
     "collectCoverageFrom": [
       "**/*.(t|j)s"

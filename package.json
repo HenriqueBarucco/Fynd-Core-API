@@ -13,6 +13,8 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
@@ -24,9 +26,15 @@
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/swagger": "^11.2.3",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
+    "drizzle-orm": "^0.44.7",
     "easy-whatsapp-lib": "github:HenriqueBarucco/Easy-WhatsApp-Lib",
+    "pg": "^8.16.3",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
+    "swagger-ui-express": "^5.0.1",
     "winston": "^3.18.3"
   },
   "devDependencies": {
@@ -39,6 +47,7 @@
     "@types/jest": "^30.0.0",
     "@types/node": "^22.10.7",
     "@types/supertest": "^6.0.2",
+    "drizzle-kit": "^0.31.7",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.2",
@@ -71,7 +80,8 @@
       "^@domain/(.*)$": "<rootDir>/domain/$1",
       "^@application/(.*)$": "<rootDir>/application/$1",
       "^@infrastructure/(.*)$": "<rootDir>/infrastructure/$1",
-      "^@entrypoint/(.*)$": "<rootDir>/entrypoint/$1"
+      "^@entrypoint/(.*)$": "<rootDir>/entrypoint/$1",
+      "^@shared/(.*)$": "<rootDir>/shared/$1"
     },
     "collectCoverageFrom": [
       "**/*.(t|j)s"

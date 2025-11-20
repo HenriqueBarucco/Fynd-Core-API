@@ -1,0 +1,15 @@
+services:
+  postgres:
+    container_name: postgres_fynd_core_api
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    volumes:
+      - database:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=usr_fynd_core
+      - POSTGRES_PASSWORD=fynd_core
+      - POSTGRES_DB=fynd
+
+volumes:
+  database:

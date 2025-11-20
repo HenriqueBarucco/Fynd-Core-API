@@ -26,7 +26,8 @@
       "@domain/*": ["domain/*"],
       "@application/*": ["application/*"],
       "@infrastructure/*": ["infrastructure/*"],
-      "@entrypoint/*": ["entrypoint/*"]
+      "@entrypoint/*": ["entrypoint/*"],
+      "@shared/*": ["shared/*"]
     }
   }
 }

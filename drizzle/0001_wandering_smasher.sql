@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "groups_external_id_unique" ON "groups" USING btree ("external_id");

@@ -1,0 +1,477 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/v1/users": {
+      "post": {
+        "description": "Creates a user with a server-generated UUID v8 identifier.",
+        "operationId": "UserController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid payload."
+          }
+        },
+        "summary": "Create user",
+        "tags": [
+          "Users"
+        ]
+      },
+      "get": {
+        "description": "Returns all users ordered by creation date.",
+        "operationId": "UserController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Users retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List users",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/v1/users/{id}": {
+      "get": {
+        "description": "Retrieves a user by its UUID v8 identifier.",
+        "operationId": "UserController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found."
+          }
+        },
+        "summary": "Get user",
+        "tags": [
+          "Users"
+        ]
+      },
+      "patch": {
+        "description": "Partially updates user attributes.",
+        "operationId": "UserController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid payload."
+          },
+          "404": {
+            "description": "User not found."
+          }
+        },
+        "summary": "Update user",
+        "tags": [
+          "Users"
+        ]
+      },
+      "delete": {
+        "description": "Removes a user permanently.",
+        "operationId": "UserController_delete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User deleted."
+          },
+          "404": {
+            "description": "User not found."
+          }
+        },
+        "summary": "Delete user",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/v1/groups": {
+      "post": {
+        "description": "Registers a group referenced by an external identifier.",
+        "operationId": "GroupController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateGroupDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Group created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid payload."
+          }
+        },
+        "summary": "Create group",
+        "tags": [
+          "Groups"
+        ]
+      },
+      "get": {
+        "description": "Lists all groups.",
+        "operationId": "GroupController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Groups retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GroupResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "List groups",
+        "tags": [
+          "Groups"
+        ]
+      }
+    },
+    "/v1/groups/{id}": {
+      "get": {
+        "description": "Retrieves a group.",
+        "operationId": "GroupController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Group found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Group not found."
+          }
+        },
+        "summary": "Get group",
+        "tags": [
+          "Groups"
+        ]
+      },
+      "patch": {
+        "description": "Updates a group.",
+        "operationId": "GroupController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateGroupDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Group updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroupResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid payload."
+          },
+          "404": {
+            "description": "Group not found."
+          }
+        },
+        "summary": "Update group",
+        "tags": [
+          "Groups"
+        ]
+      },
+      "delete": {
+        "description": "Deletes a group.",
+        "operationId": "GroupController_delete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Group deleted."
+          },
+          "404": {
+            "description": "Group not found."
+          }
+        },
+        "summary": "Delete group",
+        "tags": [
+          "Groups"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Fynd Core API",
+    "description": "HTTP endpoints for the Fynd Core platform.",
+    "version": "1.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "CreateUserDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Human readable name for the user."
+          },
+          "phone": {
+            "type": "string",
+            "description": "Primary phone number for the user."
+          }
+        },
+        "required": [
+          "name",
+          "phone"
+        ]
+      },
+      "UserResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "User identifier (UUID v8).",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "description": "Current user name."
+          },
+          "phone": {
+            "type": "string",
+            "description": "User phone number."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Creation timestamp in ISO 8601."
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Last update timestamp in ISO 8601."
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "phone",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateUserDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Updated name for the user."
+          },
+          "phone": {
+            "type": "string",
+            "description": "Updated phone number for the user."
+          }
+        }
+      },
+      "CreateGroupDto": {
+        "type": "object",
+        "properties": {
+          "externalId": {
+            "type": "string",
+            "description": "External identifier coming from upstream systems."
+          },
+          "description": {
+            "type": "string",
+            "description": "Human readable description of the group."
+          }
+        },
+        "required": [
+          "externalId",
+          "description"
+        ]
+      },
+      "GroupResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Group identifier (UUID v8).",
+            "format": "uuid"
+          },
+          "externalId": {
+            "type": "string",
+            "description": "External identifier associated to the group."
+          },
+          "description": {
+            "type": "string",
+            "description": "Readable description of the group."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Creation timestamp in ISO 8601."
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Last update timestamp in ISO 8601."
+          }
+        },
+        "required": [
+          "id",
+          "externalId",
+          "description",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateGroupDto": {
+        "type": "object",
+        "properties": {
+          "externalId": {
+            "type": "string",
+            "description": "External identifier override."
+          },
+          "description": {
+            "type": "string",
+            "description": "Updated group description."
+          }
+        }
+      }
+    }
+  }
+}

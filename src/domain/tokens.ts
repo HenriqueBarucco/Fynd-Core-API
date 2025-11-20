@@ -1,2 +1,3 @@
 export const USER_REPOSITORY = Symbol('USER_REPOSITORY');
 export const GROUP_REPOSITORY = Symbol('GROUP_REPOSITORY');
+export const PROMOTION_AI_PROVIDER = Symbol('PROMOTION_AI_PROVIDER');

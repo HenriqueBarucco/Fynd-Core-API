@@ -31,11 +31,13 @@
     "class-validator": "^0.14.2",
     "drizzle-orm": "^0.44.7",
     "easy-whatsapp-lib": "github:HenriqueBarucco/Easy-WhatsApp-Lib",
+    "openai": "^6.9.1",
     "pg": "^8.16.3",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "swagger-ui-express": "^5.0.1",
-    "winston": "^3.18.3"
+    "winston": "^3.18.3",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
@@ -81,7 +83,8 @@
       "^@application/(.*)$": "<rootDir>/application/$1",
       "^@infrastructure/(.*)$": "<rootDir>/infrastructure/$1",
       "^@entrypoint/(.*)$": "<rootDir>/entrypoint/$1",
-      "^@shared/(.*)$": "<rootDir>/shared/$1"
+      "^@shared/(.*)$": "<rootDir>/shared/$1",
+      "^@config/(.*)$": "<rootDir>/config/$1"
     },
     "collectCoverageFrom": [
       "**/*.(t|j)s"

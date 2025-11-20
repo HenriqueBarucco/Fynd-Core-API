@@ -46,6 +46,14 @@ export class DrizzleGroupRepository implements GroupRepository {
     return row ? this.mapRow(row) : null;
   }
 
+  async findByExternalId(externalId: string): Promise<Group | null> {
+    const [row] = await this.db
+      .select()
+      .from(groups)
+      .where(eq(groups.externalId, externalId));
+    return row ? this.mapRow(row) : null;
+  }
+
   async delete(group: Group): Promise<void> {
     await this.db.delete(groups).where(eq(groups.id, group.id));
   }

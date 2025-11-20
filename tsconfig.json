@@ -27,7 +27,8 @@
       "@application/*": ["application/*"],
       "@infrastructure/*": ["infrastructure/*"],
       "@entrypoint/*": ["entrypoint/*"],
-      "@shared/*": ["shared/*"]
+      "@shared/*": ["shared/*"],
+      "@config/*": ["config/*"]
     }
   }
 }

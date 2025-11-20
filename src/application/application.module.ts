@@ -11,6 +11,7 @@ import { GetGroupUseCase } from '@application/groups/use-cases/get-group.use-cas
 import { UpdateGroupUseCase } from '@application/groups/use-cases/update-group.use-case';
 import { DeleteGroupUseCase } from '@application/groups/use-cases/delete-group.use-case';
 import { ReceiveMessageUseCase } from '@application/use-cases/receive-message.use-case';
+import { PromotionService } from '@application/services/promotion.service';
 
 @Module({
   imports: [InfrastructureModule],
@@ -25,6 +26,7 @@ import { ReceiveMessageUseCase } from '@application/use-cases/receive-message.us
     GetGroupUseCase,
     UpdateGroupUseCase,
     DeleteGroupUseCase,
+    PromotionService,
     ReceiveMessageUseCase,
   ],
   exports: [
@@ -38,6 +40,7 @@ import { ReceiveMessageUseCase } from '@application/use-cases/receive-message.us
     GetGroupUseCase,
     UpdateGroupUseCase,
     DeleteGroupUseCase,
+    PromotionService,
     ReceiveMessageUseCase,
   ],
 })

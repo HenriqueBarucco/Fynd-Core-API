@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { z } from 'zod';
 
 const envSchema = z.object({
@@ -17,6 +13,19 @@ const envSchema = z.object({
     .url({ message: 'LM_STUDIO_BASE_URL must be a valid URL' })
     .default('http://localhost:1234/v1'),
   LM_STUDIO_MODEL: z.string().min(1).default('gpt-4o-mini'),
+  LM_STUDIO_PROMOTION_MODEL: z.string().min(1).optional(),
+  LM_STUDIO_EMBEDDING_MODEL: z
+    .string()
+    .min(1)
+    .default('text-embedding-3-small'),
+  QDRANT_URL: z
+    .string()
+    .url({ message: 'QDRANT_URL must be a valid URL' })
+    .default('http://localhost:6333'),
+  QDRANT_API_KEY: z.string().min(1).optional(),
+  QDRANT_COLLECTION: z.string().min(1).default('user_tastes'),
+  QDRANT_VECTOR_SIZE: z.coerce.number().int().positive().default(1024),
+  QDRANT_DISTANCE: z.enum(['Cosine', 'Dot', 'Euclid']).default('Cosine'),
   LOG_LEVEL: z
     .enum(['error', 'warn', 'info', 'http', 'verbose', 'debug', 'silly'])
     .optional(),

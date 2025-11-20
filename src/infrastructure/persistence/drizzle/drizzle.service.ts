@@ -10,11 +10,16 @@ export type DrizzleDatabase = NodePgDatabase<typeof schema>;
 export class DrizzleService implements OnModuleDestroy {
   public readonly db: DrizzleDatabase;
 
-  constructor(@Inject(Pool) private readonly pool: Pool) {
+  constructor(
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    @Inject(Pool) private readonly pool: Pool,
+  ) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     this.db = drizzle(this.pool, { schema });
   }
 
   async onModuleDestroy(): Promise<void> {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     await this.pool.end();
   }
 }

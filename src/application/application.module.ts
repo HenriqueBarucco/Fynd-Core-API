@@ -12,6 +12,8 @@ import { UpdateGroupUseCase } from '@application/groups/use-cases/update-group.u
 import { DeleteGroupUseCase } from '@application/groups/use-cases/delete-group.use-case';
 import { ReceiveMessageUseCase } from '@application/use-cases/receive-message.use-case';
 import { PromotionService } from '@application/services/promotion.service';
+import { AddUserTasteUseCase } from '@application/users/use-cases/add-user-taste.use-case';
+import { RemoveUserTasteUseCase } from '@application/users/use-cases/remove-user-taste.use-case';
 
 @Module({
   imports: [InfrastructureModule],
@@ -28,6 +30,8 @@ import { PromotionService } from '@application/services/promotion.service';
     DeleteGroupUseCase,
     PromotionService,
     ReceiveMessageUseCase,
+    AddUserTasteUseCase,
+    RemoveUserTasteUseCase,
   ],
   exports: [
     CreateUserUseCase,
@@ -42,6 +46,8 @@ import { PromotionService } from '@application/services/promotion.service';
     DeleteGroupUseCase,
     PromotionService,
     ReceiveMessageUseCase,
+    AddUserTasteUseCase,
+    RemoveUserTasteUseCase,
   ],
 })
 export class ApplicationModule {}

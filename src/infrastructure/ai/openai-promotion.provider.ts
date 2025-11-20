@@ -1,46 +1,24 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import OpenAI from 'openai';
-import type { OpenAI as OpenAIClient } from 'openai';
-import type {
-  ChatCompletion,
-  ChatCompletionMessageParam,
-} from 'openai/resources/chat/completions';
+import type { ChatCompletionMessageParam } from 'openai/resources/chat/completions';
 import type { PromotionPayload } from '@domain/promotions/promotion.interface';
 import type { PromotionAiProvider } from '@domain/promotions/providers/promotion-ai.provider';
+import { OpenAiClientService } from '@infrastructure/ai/openai-client.service';
 
 @Injectable()
 export class OpenAiPromotionProvider implements PromotionAiProvider {
   private readonly logger = new Logger(OpenAiPromotionProvider.name);
-  private readonly client: OpenAIClient;
-  private readonly model: string;
-
-  constructor(private readonly configService: ConfigService) {
-    const apiKey =
-      this.configService.get<string>('LM_STUDIO_API_KEY') ?? 'lm-studio';
-    const baseURL =
-      this.configService.get<string>('LM_STUDIO_BASE_URL') ??
-      'http://localhost:1234/v1';
-
-    this.model =
-      this.configService.get<string>('LM_STUDIO_MODEL') ?? 'gpt-4o-mini';
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-    this.client = new OpenAI({ apiKey, baseURL });
-  }
+  constructor(private readonly openAiClient: OpenAiClientService) {}
 
   async generatePromotionFromMessage(
     message: string,
   ): Promise<PromotionPayload | null> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-      const completion = (await this.client.chat.completions.create({
-        model: this.model,
+      const completion = await this.openAiClient.createChatCompletion({
+        model: this.openAiClient.defaultPromotionModel,
         temperature: 0.2,
         messages: this.buildMessages(message),
-      })) as ChatCompletion;
+      });
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
       const rawContent = completion.choices[0]?.message?.content;
 
       if (typeof rawContent !== 'string' || !rawContent.length) {
@@ -140,9 +118,9 @@ If no promotion data exists, respond with the literal string null.`,
     return Number.isFinite(numeric) ? numeric : undefined;
   }
 
-  private toStringArray(value: unknown): string[] | undefined {
+  private toStringArray(value: unknown): string[] {
     if (value === null || value === undefined) {
-      return undefined;
+      return [];
     }
 
     const items = Array.isArray(value) ? value : [value];
@@ -153,7 +131,7 @@ If no promotion data exists, respond with the literal string null.`,
       .filter((item): item is string => Boolean(item));
 
     const unique = Array.from(new Set(normalized));
-    return unique.length ? unique : undefined;
+    return unique;
   }
 
   private isPromotionCandidate(

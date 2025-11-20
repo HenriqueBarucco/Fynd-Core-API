@@ -9,7 +9,7 @@ import { validateEnv } from '@config/env.validation';
     ConfigModule.forRoot({
       isGlobal: true,
       expandVariables: true,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return
+
       validate: (config: Record<string, unknown>) => validateEnv(config),
     }),
     HttpModule,

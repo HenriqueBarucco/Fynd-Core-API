@@ -15,6 +15,13 @@
       "when": 1763645787492,
       "tag": "0001_wandering_smasher",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1763657032093,
+      "tag": "0002_mighty_taskmaster",
+      "breakpoints": true
     }
   ]
 }

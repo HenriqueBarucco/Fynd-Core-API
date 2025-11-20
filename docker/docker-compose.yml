@@ -10,6 +10,14 @@ services:
       - POSTGRES_USER=usr_fynd_core
       - POSTGRES_PASSWORD=fynd_core
       - POSTGRES_DB=fynd
+  qdrant:
+    container_name: qdrant_fynd_core_api
+    image: qdrant/qdrant:v1.9.0
+    ports:
+      - "6333:6333"
+    volumes:
+      - qdrant:/qdrant/storage
 
 volumes:
   database:
+  qdrant:

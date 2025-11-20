@@ -10,6 +10,7 @@ export const DRIZZLE_DATABASE = Symbol('DRIZZLE_DATABASE');
   imports: [ConfigModule],
   providers: [
     {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       provide: Pool,
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
@@ -19,6 +20,7 @@ export const DRIZZLE_DATABASE = Symbol('DRIZZLE_DATABASE');
           throw new Error('DATABASE_URL environment variable is not defined');
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
         return new Pool({ connectionString });
       },
     },

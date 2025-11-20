@@ -16,5 +16,5 @@ export interface PromotionPayload {
   couponCode?: string;
   description?: string;
   expiresAt?: string;
-  tags?: string[];
+  tags: string[];
 }

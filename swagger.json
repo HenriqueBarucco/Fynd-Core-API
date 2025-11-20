@@ -168,6 +168,90 @@
         ]
       }
     },
+    "/v1/users/{id}/tastes": {
+      "post": {
+        "description": "Generates an embedding for the provided taste and stores it for similarity searches.",
+        "operationId": "UserController_addTaste",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddUserTasteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Taste stored and indexed successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserTasteResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid payload."
+          },
+          "404": {
+            "description": "User not found."
+          }
+        },
+        "summary": "Add user taste",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/v1/users/{userId}/tastes/{tasteId}": {
+      "delete": {
+        "description": "Removes the taste vector from storage and Qdrant.",
+        "operationId": "UserController_deleteTaste",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tasteId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Taste removed."
+          },
+          "404": {
+            "description": "Taste or user not found."
+          }
+        },
+        "summary": "Remove user taste",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
     "/v1/groups": {
       "post": {
         "description": "Registers a group referenced by an external identifier.",
@@ -408,6 +492,57 @@
             "description": "Updated phone number for the user."
           }
         }
+      },
+      "AddUserTasteDto": {
+        "type": "object",
+        "properties": {
+          "taste": {
+            "type": "string",
+            "description": "Short description of the taste/preference to associate with the user",
+            "example": "retro gaming coupons",
+            "minLength": 2,
+            "maxLength": 120
+          }
+        },
+        "required": [
+          "taste"
+        ]
+      },
+      "UserTasteResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "label": {
+            "type": "string"
+          },
+          "embeddingModel": {
+            "type": "string",
+            "description": "Embedding model used to vectorize this taste"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "label",
+          "embeddingModel",
+          "createdAt",
+          "updatedAt"
+        ]
       },
       "CreateGroupDto": {
         "type": "object",

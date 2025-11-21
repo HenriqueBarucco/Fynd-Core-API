@@ -32,10 +32,11 @@ ENV PATH="$PNPM_HOME:$PATH"
 
 RUN corepack enable
 
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml drizzle.config.ts ./
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
+COPY drizzle ./drizzle
 
 EXPOSE 3000
 
-CMD ["node", "dist/main.js"]
+CMD pnpm db:migrate && node dist/main.js

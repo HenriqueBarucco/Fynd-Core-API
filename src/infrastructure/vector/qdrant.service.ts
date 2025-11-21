@@ -2,18 +2,6 @@ import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { QdrantClient } from '@qdrant/js-client-rest';
 
-interface UserTastePoint {
-  id: string;
-  vector: number[];
-  payload?: Record<string, unknown>;
-}
-
-export interface QdrantFilter {
-  must?: Array<Record<string, unknown>>;
-  must_not?: Array<Record<string, unknown>>;
-  should?: Array<Record<string, unknown>>;
-}
-
 export interface QdrantScoredPoint {
   id: string | number;
   score?: number;
@@ -23,9 +11,7 @@ export interface QdrantScoredPoint {
 export interface QdrantVectorSearchOptions {
   vector: number[];
   limit: number;
-  offset?: number;
   scoreThreshold?: number;
-  filter?: QdrantFilter;
 }
 
 @Injectable()
@@ -55,7 +41,13 @@ export class QdrantService implements OnModuleInit {
     await this.ensureCollection();
   }
 
-  async upsert(points: UserTastePoint[]): Promise<void> {
+  async upsert(
+    points: Array<{
+      id: string;
+      vector: number[];
+      payload?: Record<string, unknown>;
+    }>,
+  ): Promise<void> {
     if (!points.length) {
       return;
     }
@@ -78,13 +70,13 @@ export class QdrantService implements OnModuleInit {
 
   async search(
     options: QdrantVectorSearchOptions,
+    offset = 0,
   ): Promise<QdrantScoredPoint[]> {
     const response = await this.client.search(this.collectionName, {
       vector: options.vector,
       limit: options.limit,
-      offset: options.offset ?? 0,
+      offset,
       score_threshold: options.scoreThreshold,
-      filter: options.filter,
       with_payload: true,
     });
 
@@ -108,7 +100,7 @@ export class QdrantService implements OnModuleInit {
       return;
     } catch (error) {
       if (!this.isCollectionMissing(error)) {
-        throw error instanceof Error ? error : new Error(String(error));
+        throw error;
       }
 
       this.logger.warn(

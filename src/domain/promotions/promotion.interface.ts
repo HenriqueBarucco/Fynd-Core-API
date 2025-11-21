@@ -8,12 +8,12 @@ export type PromotionType =
 
 export interface PromotionPayload {
   name: string;
-  currentPrice: number;
+  currentPrice: number | null;
   previousPrice?: number;
   currency?: string;
   type: PromotionType;
   link?: string;
-  couponCode?: string;
+  couponCodes?: string[];
   description?: string;
   expiresAt?: string;
   tags: string[];

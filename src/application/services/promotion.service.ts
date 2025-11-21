@@ -31,8 +31,15 @@ export class PromotionService {
         return null;
       }
 
-      if (!promotion.name || promotion.currentPrice === undefined) {
-        this.logger.warn('Promotion payload missing required fields');
+      if (!promotion.name) {
+        this.logger.warn('Promotion payload missing name');
+        return null;
+      }
+
+      if (promotion.currentPrice === null && !promotion.couponCodes?.length) {
+        this.logger.warn(
+          'Promotion must have either currentPrice or couponCodes',
+        );
         return null;
       }
 

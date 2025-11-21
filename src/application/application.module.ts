@@ -13,6 +13,9 @@ import { UpdateGroupUseCase } from '@application/groups/use-cases/update-group.u
 import { DeleteGroupUseCase } from '@application/groups/use-cases/delete-group.use-case';
 import { ReceiveMessageUseCase } from '@application/use-cases/receive-message.use-case';
 import { PromotionService } from '@application/services/promotion.service';
+import { PromotionMessageFormatterService } from '@application/services/promotion-message-formatter.service';
+import { UserMatchingService } from '@application/services/user-matching.service';
+import { NotificationDispatcherService } from '@application/services/notification-dispatcher.service';
 import { AddUserTasteUseCase } from '@application/users/use-cases/add-user-taste.use-case';
 import { RemoveUserTasteUseCase } from '@application/users/use-cases/remove-user-taste.use-case';
 import { SearchUsersByTasteUseCase } from '@application/users/use-cases/search-users-by-taste.use-case';
@@ -32,6 +35,9 @@ import { SearchUsersByTasteUseCase } from '@application/users/use-cases/search-u
     UpdateGroupUseCase,
     DeleteGroupUseCase,
     PromotionService,
+    PromotionMessageFormatterService,
+    UserMatchingService,
+    NotificationDispatcherService,
     ReceiveMessageUseCase,
     AddUserTasteUseCase,
     RemoveUserTasteUseCase,

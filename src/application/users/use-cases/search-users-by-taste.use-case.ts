@@ -50,8 +50,9 @@ export class SearchUsersByTasteUseCase
     @Inject(EMBEDDING_PROVIDER)
     private readonly embeddingProvider: EmbeddingProvider,
   ) {
-    this.defaultScoreThreshold =
-      this.configService.get<number>('PROMOTION_MATCH_SCORE_THRESHOLD') ?? 0.1;
+    this.defaultScoreThreshold = this.configService.getOrThrow<number>(
+      'PROMOTION_MATCH_SCORE_THRESHOLD',
+    );
   }
 
   async execute({

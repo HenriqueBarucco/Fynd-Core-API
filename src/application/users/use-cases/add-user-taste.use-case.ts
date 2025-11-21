@@ -66,10 +66,7 @@ export class AddUserTasteUseCase
     }
 
     await this.userTasteRepository.save(taste);
-    await this.vectorStore.upsert(taste, embedding.vector, {
-      originalLabel: cleanedLabel,
-      searchLabel: cleanedLabel,
-    });
+    await this.vectorStore.upsert(taste, embedding.vector);
 
     return taste;
   }

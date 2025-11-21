@@ -7,6 +7,7 @@ import type {
   ChatCompletionCreateParamsNonStreaming,
 } from 'openai/resources/chat/completions';
 import type { EmbeddingCreateParams } from 'openai/resources/embeddings';
+import { AI_CONFIG } from './config/ai.constants';
 
 export interface GeneratedEmbedding {
   vector: number[];
@@ -19,7 +20,6 @@ export class OpenAiClientService {
   private readonly client: OpenAIClient;
   private readonly promotionModel: string;
   private readonly embeddingModel: string;
-  private readonly tasteLabelModel: string;
 
   constructor(private readonly configService: ConfigService) {
     const apiKey = this.configService.getOrThrow<string>('LM_STUDIO_API_KEY');
@@ -35,11 +35,11 @@ export class OpenAiClientService {
       'LM_STUDIO_EMBEDDING_MODEL',
     );
 
-    this.tasteLabelModel =
-      this.configService.get<string>('LM_STUDIO_TASTE_LABEL_MODEL') ??
-      defaultModel;
-
-    this.client = new OpenAI({ apiKey, baseURL, timeout: 1800000 });
+    this.client = new OpenAI({
+      apiKey,
+      baseURL,
+      timeout: AI_CONFIG.TIMEOUT,
+    });
   }
 
   get defaultPromotionModel(): string {
@@ -48,10 +48,6 @@ export class OpenAiClientService {
 
   get defaultEmbeddingModel(): string {
     return this.embeddingModel;
-  }
-
-  get defaultTasteLabelModel(): string {
-    return this.tasteLabelModel;
   }
 
   async createChatCompletion(

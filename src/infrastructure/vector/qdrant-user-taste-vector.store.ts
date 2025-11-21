@@ -5,7 +5,6 @@ import type {
   UserTasteVectorStore,
 } from '@domain/users/services/user-taste-vector-store.interface';
 import type { UserTaste } from '@domain/users/entities/user-taste.entity';
-import type { UserTasteLabelMetadata } from '@domain/users/services/user-taste-label-enhancer.interface';
 import {
   QdrantService,
   type QdrantScoredPoint,
@@ -15,13 +14,9 @@ import {
 export class QdrantUserTasteVectorStore implements UserTasteVectorStore {
   constructor(private readonly qdrantService: QdrantService) {}
   private readonly logger = new Logger(QdrantUserTasteVectorStore.name);
-  private readonly searchBatchSize = 128; // Qdrant search requires paging even when using score threshold
+  private readonly searchBatchSize = 128;
 
-  async upsert(
-    taste: UserTaste,
-    vector: number[],
-    metadata: UserTasteLabelMetadata,
-  ): Promise<void> {
+  async upsert(taste: UserTaste, vector: number[]): Promise<void> {
     try {
       await this.qdrantService.upsert([
         {
@@ -30,8 +25,8 @@ export class QdrantUserTasteVectorStore implements UserTasteVectorStore {
           payload: {
             tasteId: taste.id,
             userId: taste.userId,
-            label: metadata.searchLabel,
-            originalLabel: metadata.originalLabel,
+            label: taste.normalizedLabel,
+            originalLabel: taste.label,
           },
         },
       ]);
@@ -56,12 +51,14 @@ export class QdrantUserTasteVectorStore implements UserTasteVectorStore {
     let offset = 0;
 
     while (true) {
-      const points = await this.qdrantService.search({
-        vector,
-        limit: this.searchBatchSize,
+      const points = await this.qdrantService.search(
+        {
+          vector,
+          limit: this.searchBatchSize,
+          scoreThreshold: options.scoreThreshold,
+        },
         offset,
-        scoreThreshold: options.scoreThreshold,
-      });
+      );
 
       this.logger.debug(
         `Qdrant returned ${points.length} points for offset ${offset}`,

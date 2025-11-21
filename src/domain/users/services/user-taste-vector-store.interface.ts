@@ -1,5 +1,4 @@
 import { UserTaste } from '@domain/users/entities/user-taste.entity';
-import type { UserTasteLabelMetadata } from '@domain/users/services/user-taste-label-enhancer.interface';
 
 export interface UserTasteVectorMatch {
   tasteId: string;
@@ -14,11 +13,7 @@ export interface UserTasteSimilarityOptions {
 }
 
 export interface UserTasteVectorStore {
-  upsert(
-    taste: UserTaste,
-    vector: number[],
-    metadata: UserTasteLabelMetadata,
-  ): Promise<void>;
+  upsert(taste: UserTaste, vector: number[]): Promise<void>;
 
   delete(taste: UserTaste): Promise<void>;
 

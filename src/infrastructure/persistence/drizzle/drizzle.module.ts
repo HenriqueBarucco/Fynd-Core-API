@@ -14,12 +14,7 @@ export const DRIZZLE_DATABASE = Symbol('DRIZZLE_DATABASE');
       provide: Pool,
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
-        const connectionString = config.get<string>('DATABASE_URL');
-
-        if (!connectionString) {
-          throw new Error('DATABASE_URL environment variable is not defined');
-        }
-
+        const connectionString = config.getOrThrow<string>('DATABASE_URL');
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
         return new Pool({ connectionString });
       },

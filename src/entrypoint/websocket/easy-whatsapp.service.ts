@@ -15,14 +15,7 @@ export class EasyWhatsAppService implements OnModuleInit {
   ) {}
 
   onModuleInit() {
-    const apiKey = this.config.get<string>('EASY_WHATSAPP_KEY');
-
-    if (!apiKey) {
-      this.logger.warn(
-        'EASY_WHATSAPP_KEY not set, skipping WhatsApp socket bootstrap',
-      );
-      return;
-    }
+    const apiKey = this.config.getOrThrow<string>('EASY_WHATSAPP_KEY');
 
     this.connection = new EasyWhatsApp(apiKey);
     this.logger.log('EasyWhatsApp connection initialized');
@@ -34,7 +27,7 @@ export class EasyWhatsAppService implements OnModuleInit {
 
   private async handleReceivedMessage(message: Message): Promise<void> {
     try {
-      this.logger.log('Received WhatsApp message', message);
+      this.logger.debug('Received WhatsApp message', message);
 
       const textPayload = this.extractTextPayload(message);
 

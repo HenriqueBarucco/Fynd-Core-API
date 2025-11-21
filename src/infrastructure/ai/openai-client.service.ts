@@ -19,24 +19,27 @@ export class OpenAiClientService {
   private readonly client: OpenAIClient;
   private readonly promotionModel: string;
   private readonly embeddingModel: string;
+  private readonly tasteLabelModel: string;
 
   constructor(private readonly configService: ConfigService) {
-    const apiKey =
-      this.configService.get<string>('LM_STUDIO_API_KEY') ?? 'lm-studio';
-    const baseURL =
-      this.configService.get<string>('LM_STUDIO_BASE_URL') ??
-      'http://localhost:1234/v1';
+    const apiKey = this.configService.getOrThrow<string>('LM_STUDIO_API_KEY');
+    const baseURL = this.configService.getOrThrow<string>('LM_STUDIO_BASE_URL');
+    const defaultModel =
+      this.configService.getOrThrow<string>('LM_STUDIO_MODEL');
 
     this.promotionModel =
       this.configService.get<string>('LM_STUDIO_PROMOTION_MODEL') ??
-      this.configService.get<string>('LM_STUDIO_MODEL') ??
-      'gpt-4o-mini';
+      defaultModel;
 
-    this.embeddingModel =
-      this.configService.get<string>('LM_STUDIO_EMBEDDING_MODEL') ??
-      'text-embedding-3-small';
+    this.embeddingModel = this.configService.getOrThrow<string>(
+      'LM_STUDIO_EMBEDDING_MODEL',
+    );
 
-    this.client = new OpenAI({ apiKey, baseURL });
+    this.tasteLabelModel =
+      this.configService.get<string>('LM_STUDIO_TASTE_LABEL_MODEL') ??
+      defaultModel;
+
+    this.client = new OpenAI({ apiKey, baseURL, timeout: 1800000 });
   }
 
   get defaultPromotionModel(): string {
@@ -45,6 +48,10 @@ export class OpenAiClientService {
 
   get defaultEmbeddingModel(): string {
     return this.embeddingModel;
+  }
+
+  get defaultTasteLabelModel(): string {
+    return this.tasteLabelModel;
   }
 
   async createChatCompletion(
@@ -75,6 +82,7 @@ export class OpenAiClientService {
       ...params,
       input: params.input,
       model: params.model ?? this.embeddingModel,
+      encoding_format: 'float',
     };
 
     try {

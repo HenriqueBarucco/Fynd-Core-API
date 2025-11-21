@@ -5,6 +5,7 @@ import {
   PROMOTION_AI_PROVIDER,
   USER_REPOSITORY,
   USER_TASTE_REPOSITORY,
+  USER_TASTE_LABEL_ENHANCER,
   USER_TASTE_VECTOR_STORE,
 } from '@domain/tokens';
 import { DrizzleModule } from '@infrastructure/persistence/drizzle/drizzle.module';
@@ -16,6 +17,7 @@ import { QdrantService } from '@infrastructure/vector/qdrant.service';
 import { QdrantUserTasteVectorStore } from '@infrastructure/vector/qdrant-user-taste-vector.store';
 import { OpenAiClientService } from '@infrastructure/ai/openai-client.service';
 import { OpenAiEmbeddingProvider } from '@infrastructure/ai/openai-embedding.provider';
+import { OpenAiUserTasteLabelProvider } from '@infrastructure/ai/openai-user-taste-label.provider';
 
 @Module({
   imports: [DrizzleModule],
@@ -44,6 +46,7 @@ import { OpenAiEmbeddingProvider } from '@infrastructure/ai/openai-embedding.pro
     OpenAiClientService,
     OpenAiPromotionProvider,
     OpenAiEmbeddingProvider,
+    OpenAiUserTasteLabelProvider,
     {
       provide: PROMOTION_AI_PROVIDER,
       useExisting: OpenAiPromotionProvider,
@@ -51,6 +54,10 @@ import { OpenAiEmbeddingProvider } from '@infrastructure/ai/openai-embedding.pro
     {
       provide: EMBEDDING_PROVIDER,
       useExisting: OpenAiEmbeddingProvider,
+    },
+    {
+      provide: USER_TASTE_LABEL_ENHANCER,
+      useExisting: OpenAiUserTasteLabelProvider,
     },
   ],
   exports: [
@@ -60,6 +67,7 @@ import { OpenAiEmbeddingProvider } from '@infrastructure/ai/openai-embedding.pro
     USER_TASTE_VECTOR_STORE,
     PROMOTION_AI_PROVIDER,
     EMBEDDING_PROVIDER,
+    USER_TASTE_LABEL_ENHANCER,
   ],
 })
 export class InfrastructureModule {}

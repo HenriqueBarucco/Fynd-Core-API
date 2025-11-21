@@ -9,10 +9,7 @@ export class OpenAiEmbeddingProvider implements EmbeddingProvider {
 
   constructor(private readonly client: OpenAiClientService) {}
 
-  async generateEmbedding(
-    input: string,
-    options?: { model?: string },
-  ): Promise<EmbeddingResult> {
+  async generateEmbedding(input: string): Promise<EmbeddingResult> {
     const cleaned = input.trim();
 
     if (!cleaned.length) {
@@ -21,12 +18,17 @@ export class OpenAiEmbeddingProvider implements EmbeddingProvider {
 
     const embedding = await this.client.createEmbedding({
       input: cleaned,
-      model: options?.model ?? this.client.defaultEmbeddingModel,
+      model: this.client.defaultEmbeddingModel,
     });
 
     if (!embedding.vector?.length) {
       this.logger.warn('Embedding vector came back empty');
       throw new Error('Embedding vector is empty');
+    }
+
+    if (embedding.vector.every((val) => val === 0)) {
+      this.logger.warn('Embedding vector is all zeros');
+      throw new Error('Embedding vector is all zeros');
     }
 
     return {

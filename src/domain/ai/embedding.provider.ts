@@ -4,8 +4,5 @@ export interface EmbeddingResult {
 }
 
 export interface EmbeddingProvider {
-  generateEmbedding(
-    input: string,
-    options?: { model?: string },
-  ): Promise<EmbeddingResult>;
+  generateEmbedding(input: string): Promise<EmbeddingResult>;
 }

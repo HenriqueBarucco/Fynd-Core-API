@@ -36,9 +36,16 @@ export class EasyWhatsAppService implements OnModuleInit {
     try {
       this.logger.log('Received WhatsApp message', message);
 
+      const textPayload = this.extractTextPayload(message);
+
+      if (!textPayload) {
+        this.logger.warn('Ignoring message without textual content');
+        return;
+      }
+
       await this.receiveMessageUseCase.execute({
         from: message.group || message.phone,
-        message: message.message,
+        message: textPayload,
       });
     } catch (error) {
       this.logger.error(
@@ -46,5 +53,18 @@ export class EasyWhatsAppService implements OnModuleInit {
         error instanceof Error ? error.stack : String(error),
       );
     }
+  }
+
+  private extractTextPayload(message: Message): string | null {
+    if (message.type === 'image') {
+      return this.sanitizeText(message.caption);
+    }
+
+    return this.sanitizeText(message.message);
+  }
+
+  private sanitizeText(rawText?: string): string | null {
+    const trimmed = rawText?.trim();
+    return trimmed?.length ? trimmed : null;
   }
 }

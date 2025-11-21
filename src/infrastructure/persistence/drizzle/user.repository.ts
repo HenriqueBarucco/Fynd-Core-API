@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { eq } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 import { DRIZZLE_DATABASE } from './drizzle.module';
 import type { DrizzleDatabase } from './drizzle.service';
 import { users } from './schema';
@@ -39,6 +39,24 @@ export class DrizzleUserRepository implements UserRepository {
   async findAll(): Promise<User[]> {
     const rows = await this.db.select().from(users).orderBy(users.createdAt);
     return rows.map((row) => this.mapRow(row));
+  }
+
+  async findManyByIds(ids: string[]): Promise<User[]> {
+    if (!ids.length) {
+      return [];
+    }
+
+    const rows = await this.db
+      .select()
+      .from(users)
+      .where(inArray(users.id, ids));
+
+    const rowsById = new Map(rows.map((row) => [row.id, row]));
+
+    return ids
+      .map((id) => rowsById.get(id))
+      .filter((row): row is typeof users.$inferSelect => Boolean(row))
+      .map((row) => this.mapRow(row));
   }
 
   async findById(id: string): Promise<User | null> {

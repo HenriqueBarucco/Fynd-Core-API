@@ -8,6 +8,26 @@ interface UserTastePoint {
   payload?: Record<string, unknown>;
 }
 
+export interface QdrantFilter {
+  must?: Array<Record<string, unknown>>;
+  must_not?: Array<Record<string, unknown>>;
+  should?: Array<Record<string, unknown>>;
+}
+
+export interface QdrantScoredPoint {
+  id: string | number;
+  score?: number;
+  payload?: Record<string, unknown>;
+}
+
+export interface QdrantVectorSearchOptions {
+  vector: number[];
+  limit: number;
+  offset?: number;
+  scoreThreshold?: number;
+  filter?: QdrantFilter;
+}
+
 @Injectable()
 export class QdrantService implements OnModuleInit {
   private readonly logger = new Logger(QdrantService.name);
@@ -17,17 +37,16 @@ export class QdrantService implements OnModuleInit {
   private readonly distance: 'Cosine' | 'Dot' | 'Euclid';
 
   constructor(private readonly configService: ConfigService) {
-    const url =
-      this.configService.get<string>('QDRANT_URL') ?? 'http://localhost:6333';
+    const url = this.configService.getOrThrow<string>('QDRANT_URL');
     const apiKey = this.configService.get<string>('QDRANT_API_KEY');
 
     this.collectionName =
-      this.configService.get<string>('QDRANT_COLLECTION') ?? 'user_tastes';
+      this.configService.getOrThrow<string>('QDRANT_COLLECTION');
     this.vectorSize =
-      this.configService.get<number>('QDRANT_VECTOR_SIZE') ?? 1024;
-    this.distance =
-      this.configService.get<'Cosine' | 'Dot' | 'Euclid'>('QDRANT_DISTANCE') ??
-      'Cosine';
+      this.configService.getOrThrow<number>('QDRANT_VECTOR_SIZE');
+    this.distance = this.configService.getOrThrow<'Cosine' | 'Dot' | 'Euclid'>(
+      'QDRANT_DISTANCE',
+    );
 
     this.client = new QdrantClient({ url, apiKey });
   }
@@ -55,6 +74,31 @@ export class QdrantService implements OnModuleInit {
     await this.client.delete(this.collectionName, {
       points: pointIds,
     });
+  }
+
+  async search(
+    options: QdrantVectorSearchOptions,
+  ): Promise<QdrantScoredPoint[]> {
+    const response = await this.client.search(this.collectionName, {
+      vector: options.vector,
+      limit: options.limit,
+      offset: options.offset ?? 0,
+      score_threshold: options.scoreThreshold,
+      filter: options.filter,
+      with_payload: true,
+    });
+
+    if (Array.isArray(response)) {
+      return response as unknown as QdrantScoredPoint[];
+    }
+
+    const result = (response as { result?: QdrantScoredPoint[] }).result;
+
+    if (!Array.isArray(result)) {
+      return [];
+    }
+
+    return result;
   }
 
   private async ensureCollection(): Promise<void> {
@@ -101,13 +145,16 @@ export class QdrantService implements OnModuleInit {
       return null;
     }
 
-    const result = (description as { result?: unknown }).result;
+    let config = (description as { config?: unknown }).config;
 
-    if (!result || typeof result !== 'object') {
-      return null;
+    if (!config) {
+      const result = (description as { result?: unknown }).result;
+
+      if (result && typeof result === 'object') {
+        config = (result as { config?: unknown }).config;
+      }
     }
 
-    const config = (result as { config?: unknown }).config;
     if (!config || typeof config !== 'object') {
       return null;
     }

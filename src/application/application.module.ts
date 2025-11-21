@@ -15,6 +15,7 @@ import { ReceiveMessageUseCase } from '@application/use-cases/receive-message.us
 import { PromotionService } from '@application/services/promotion.service';
 import { AddUserTasteUseCase } from '@application/users/use-cases/add-user-taste.use-case';
 import { RemoveUserTasteUseCase } from '@application/users/use-cases/remove-user-taste.use-case';
+import { SearchUsersByTasteUseCase } from '@application/users/use-cases/search-users-by-taste.use-case';
 
 @Module({
   imports: [InfrastructureModule],
@@ -34,6 +35,7 @@ import { RemoveUserTasteUseCase } from '@application/users/use-cases/remove-user
     ReceiveMessageUseCase,
     AddUserTasteUseCase,
     RemoveUserTasteUseCase,
+    SearchUsersByTasteUseCase,
   ],
   exports: [
     CreateUserUseCase,
@@ -51,6 +53,7 @@ import { RemoveUserTasteUseCase } from '@application/users/use-cases/remove-user
     ReceiveMessageUseCase,
     AddUserTasteUseCase,
     RemoveUserTasteUseCase,
+    SearchUsersByTasteUseCase,
   ],
 })
 export class ApplicationModule {}

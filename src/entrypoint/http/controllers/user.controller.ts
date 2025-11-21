@@ -9,6 +9,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -25,6 +26,7 @@ import { GetUserUseCase } from '@application/users/use-cases/get-user.use-case';
 import { UpdateUserUseCase } from '@application/users/use-cases/update-user.use-case';
 import { DeleteUserUseCase } from '@application/users/use-cases/delete-user.use-case';
 import { GetUserTastesUseCase } from '@application/users/use-cases/get-user-tastes.use-case';
+import { SearchUsersByTasteUseCase } from '@application/users/use-cases/search-users-by-taste.use-case';
 import { UserResponseDto } from '@entrypoint/http/dto/user-response.dto';
 import { CreateUserDto } from '@entrypoint/http/dto/create-user.dto';
 import { UpdateUserDto } from '@entrypoint/http/dto/update-user.dto';
@@ -33,6 +35,8 @@ import { AddUserTasteUseCase } from '@application/users/use-cases/add-user-taste
 import { RemoveUserTasteUseCase } from '@application/users/use-cases/remove-user-taste.use-case';
 import { AddUserTasteDto } from '@entrypoint/http/dto/add-user-taste.dto';
 import { UserTasteResponseDto } from '@entrypoint/http/dto/user-taste-response.dto';
+import { SearchUsersByTasteQueryDto } from '@entrypoint/http/dto/search-users-by-taste-query.dto';
+import { UserTasteSearchResponseDto } from '@entrypoint/http/dto/user-taste-search-response.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -46,6 +50,7 @@ export class UserController {
     private readonly deleteUserUseCase: DeleteUserUseCase,
     private readonly addUserTasteUseCase: AddUserTasteUseCase,
     private readonly removeUserTasteUseCase: RemoveUserTasteUseCase,
+    private readonly searchUsersByTasteUseCase: SearchUsersByTasteUseCase,
   ) {}
 
   @Post()
@@ -76,6 +81,24 @@ export class UserController {
   async findAll(): Promise<UserResponseDto[]> {
     const users = await this.getUsersUseCase.execute();
     return users.map((user) => UserResponseDto.fromEntity(user));
+  }
+
+  @Get('search/by-label')
+  @ApiOperation({
+    summary: 'Search users by taste label',
+    description:
+      'Runs an embedding search on the stored tastes and returns users ranked by similarity to the provided label.',
+  })
+  @ApiOkResponse({
+    description: 'Matching users retrieved successfully.',
+    type: UserTasteSearchResponseDto,
+  })
+  @ApiBadRequestResponse({ description: 'Invalid query parameters.' })
+  async searchByLabel(
+    @Query() query: SearchUsersByTasteQueryDto,
+  ): Promise<UserTasteSearchResponseDto> {
+    const output = await this.searchUsersByTasteUseCase.execute(query);
+    return UserTasteSearchResponseDto.fromUseCaseOutput(output);
   }
 
   @Get(':id')

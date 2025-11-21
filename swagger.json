@@ -61,6 +61,66 @@
         ]
       }
     },
+    "/v1/users/search/by-label": {
+      "get": {
+        "description": "Runs an embedding search on the stored tastes and returns users ranked by similarity to the provided label.",
+        "operationId": "UserController_searchByLabel",
+        "parameters": [
+          {
+            "name": "label",
+            "required": true,
+            "in": "query",
+            "description": "Taste label used as the search seed.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scoreThreshold",
+            "required": false,
+            "in": "query",
+            "description": "Minimum similarity score between 0 and 1.",
+            "schema": {
+              "minimum": 0,
+              "maximum": 1,
+              "default": 0.1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Maximum number of unique users to return.",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Matching users retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserTasteSearchResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters."
+          }
+        },
+        "summary": "Search users by taste label",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
     "/v1/users/{id}": {
       "get": {
         "description": "Retrieves a user by its UUID v8 identifier.",
@@ -514,6 +574,64 @@
           "phone",
           "createdAt",
           "updatedAt"
+        ]
+      },
+      "UserTasteMatchDto": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/UserResponseDto"
+          },
+          "tasteId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Identifier of the matched taste."
+          },
+          "matchedLabel": {
+            "type": "string",
+            "description": "Search label stored with the taste vector."
+          },
+          "matchedOriginalLabel": {
+            "type": "string",
+            "description": "Original label provided when the taste was stored."
+          },
+          "score": {
+            "type": "number",
+            "description": "Similarity score reported by Qdrant.",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": [
+          "user",
+          "tasteId",
+          "matchedLabel",
+          "score"
+        ]
+      },
+      "UserTasteSearchResponseDto": {
+        "type": "object",
+        "properties": {
+          "originalLabel": {
+            "type": "string",
+            "description": "Original input label after cleanup."
+          },
+          "searchLabel": {
+            "type": "string",
+            "description": "Search-friendly label used to generate embeddings."
+          },
+          "results": {
+            "description": "Users ranked by similarity to the requested taste.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserTasteMatchDto"
+            }
+          }
+        },
+        "required": [
+          "originalLabel",
+          "searchLabel",
+          "results"
         ]
       },
       "UserTasteResponseDto": {

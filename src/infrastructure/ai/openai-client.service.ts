@@ -98,4 +98,14 @@ export class OpenAiClientService {
       throw error;
     }
   }
+
+  async healthCheck(): Promise<boolean> {
+    try {
+      await this.client.models.list();
+      return true;
+    } catch (error) {
+      this.logger.error('OpenAI health check failed', error);
+      return false;
+    }
+  }
 }

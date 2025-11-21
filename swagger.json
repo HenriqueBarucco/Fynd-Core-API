@@ -514,6 +514,31 @@
           "Groups"
         ]
       }
+    },
+    "/v1/health": {
+      "get": {
+        "operationId": "HealthController_check",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Health check successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthCheckResponseDto"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable - one or more dependencies are unhealthy"
+          }
+        },
+        "summary": "Check health status of all dependencies",
+        "tags": [
+          "Health"
+        ]
+      }
     }
   },
   "info": {
@@ -760,6 +785,36 @@
             "description": "Updated group description."
           }
         }
+      },
+      "HealthCheckResponseDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "up",
+              "down",
+              "degraded"
+            ]
+          },
+          "timestamp": {
+            "type": "string"
+          },
+          "dependencies": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          },
+          "uptime": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "status",
+          "timestamp",
+          "dependencies"
+        ]
       }
     }
   }

@@ -19,6 +19,7 @@ import { NotificationDispatcherService } from '@application/services/notificatio
 import { AddUserTasteUseCase } from '@application/users/use-cases/add-user-taste.use-case';
 import { RemoveUserTasteUseCase } from '@application/users/use-cases/remove-user-taste.use-case';
 import { SearchUsersByTasteUseCase } from '@application/users/use-cases/search-users-by-taste.use-case';
+import { HealthCheckService } from '@application/services/health-check.service';
 
 @Module({
   imports: [InfrastructureModule],
@@ -42,6 +43,7 @@ import { SearchUsersByTasteUseCase } from '@application/users/use-cases/search-u
     AddUserTasteUseCase,
     RemoveUserTasteUseCase,
     SearchUsersByTasteUseCase,
+    HealthCheckService,
   ],
   exports: [
     CreateUserUseCase,
@@ -60,6 +62,7 @@ import { SearchUsersByTasteUseCase } from '@application/users/use-cases/search-u
     AddUserTasteUseCase,
     RemoveUserTasteUseCase,
     SearchUsersByTasteUseCase,
+    HealthCheckService,
   ],
 })
 export class ApplicationModule {}

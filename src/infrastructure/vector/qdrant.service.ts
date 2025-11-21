@@ -183,4 +183,14 @@ export class QdrantService implements OnModuleInit {
       ? /not\s+found/i.test(error.message) || /404/.test(error.message)
       : false;
   }
+
+  async healthCheck(): Promise<boolean> {
+    try {
+      await this.client.getCollections();
+      return true;
+    } catch (error) {
+      this.logger.error('Qdrant health check failed', error);
+      return false;
+    }
+  }
 }

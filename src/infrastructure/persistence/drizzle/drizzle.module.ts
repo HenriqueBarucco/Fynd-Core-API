@@ -26,6 +26,6 @@ export const DRIZZLE_DATABASE = Symbol('DRIZZLE_DATABASE');
       useFactory: (service: DrizzleService) => service.db,
     },
   ],
-  exports: [DRIZZLE_DATABASE],
+  exports: [DRIZZLE_DATABASE, DrizzleService],
 })
 export class DrizzleModule {}

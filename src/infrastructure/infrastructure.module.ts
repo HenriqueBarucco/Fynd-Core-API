@@ -62,6 +62,8 @@ import { WhatsAppModule } from '@infrastructure/whatsapp/whatsapp.module';
     PROMOTION_AI_PROVIDER,
     EMBEDDING_PROVIDER,
     WhatsAppModule,
+    QdrantService,
+    OpenAiClientService,
   ],
 })
 export class InfrastructureModule {}

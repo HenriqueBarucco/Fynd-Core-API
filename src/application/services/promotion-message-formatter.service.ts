@@ -32,7 +32,7 @@ export class PromotionMessageFormatterService {
   }
 
   private buildHeader(): string {
-    return `${this.EMOJI.FIRE} *New Promotion Detected!* ${this.EMOJI.FIRE}`;
+    return `${this.EMOJI.FIRE} *Nova Promoção!* ${this.EMOJI.FIRE}`;
   }
 
   private buildTitle(name: string): string {
@@ -82,7 +82,7 @@ export class PromotionMessageFormatterService {
     }
 
     const coupons = couponCodes.map((code) => `\`${code}\``).join(', ');
-    return `${this.EMOJI.TICKET} *Coupon(s):* ${coupons}`;
+    return `${this.EMOJI.TICKET} *Cupom(s):* ${coupons}`;
   }
 
   private buildMatchScoreSection(score?: number): string {
@@ -93,7 +93,7 @@ export class PromotionMessageFormatterService {
     const percentage = (score * 100).toFixed(0);
     const stars = this.getStarRating(score);
 
-    return `${this.EMOJI.SCORE} *Match:* ${percentage}% ${stars}`;
+    return `${this.EMOJI.SCORE} *Score:* ${percentage}% ${stars}`;
   }
 
   private formatPrice(price: number, currency: string): string {

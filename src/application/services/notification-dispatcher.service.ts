@@ -5,6 +5,7 @@ import type { UserTasteVectorMatch } from '@domain/users/services/user-taste-vec
 import type { UserRepository } from '@domain/users/repositories/user.repository';
 import { MESSAGE_SENDER, USER_REPOSITORY } from '@domain/tokens';
 import { PromotionMessageFormatterService } from './promotion-message-formatter.service';
+import { File } from '@app/domain/messaging/file.interface';
 
 @Injectable()
 export class NotificationDispatcherService {
@@ -21,6 +22,7 @@ export class NotificationDispatcherService {
   async notifyUsers(
     matches: UserTasteVectorMatch[],
     promotion: PromotionPayload,
+    image?: File,
   ): Promise<void> {
     if (!matches.length) {
       this.logger.log(`No users to notify for promotion: ${promotion.name}`);
@@ -48,7 +50,7 @@ export class NotificationDispatcherService {
     const sendPromises = users.map((user) => {
       const matchScore = userScoreMap.get(user.id);
       const message = this.messageFormatter.format({ promotion, matchScore });
-      return this.sendNotification(user.phone, message, promotion.name);
+      return this.sendNotification(user.phone, message, promotion.name, image);
     });
 
     await Promise.allSettled(sendPromises);
@@ -62,9 +64,10 @@ export class NotificationDispatcherService {
     phone: string,
     message: string,
     promotionName: string,
+    image?: File,
   ): Promise<void> {
     try {
-      await this.messageSender.sendMessage(phone, message);
+      await this.messageSender.sendMessage(phone, message, image);
     } catch (error) {
       this.logger.error(
         `Failed to send notification for "${promotionName}" to ${phone}`,

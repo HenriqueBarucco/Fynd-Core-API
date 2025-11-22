@@ -5,10 +5,12 @@ import type { GroupRepository } from '@app/domain/groups/repositories/group.repo
 import { PromotionService } from '@application/services/promotion.service';
 import { UserMatchingService } from '@application/services/user-matching.service';
 import { NotificationDispatcherService } from '@application/services/notification-dispatcher.service';
+import { File } from '@app/domain/messaging/file.interface';
 
 export interface ReceiveMessageInput {
   from: string;
   message: string;
+  image?: File;
 }
 
 @Injectable()
@@ -25,7 +27,7 @@ export class ReceiveMessageUseCase
     private readonly notificationDispatcher: NotificationDispatcherService,
   ) {}
 
-  async execute({ from, message }: ReceiveMessageInput): Promise<void> {
+  async execute({ from, message, image }: ReceiveMessageInput): Promise<void> {
     this.logger.log(`Received message from ${from}`);
 
     const group = await this.groupRepository.findByExternalId(from);
@@ -58,6 +60,10 @@ export class ReceiveMessageUseCase
       `Found ${interestedUsers.length} interested users for promotion: ${promotion.name}`,
     );
 
-    await this.notificationDispatcher.notifyUsers(interestedUsers, promotion);
+    await this.notificationDispatcher.notifyUsers(
+      interestedUsers,
+      promotion,
+      image,
+    );
   }
 }

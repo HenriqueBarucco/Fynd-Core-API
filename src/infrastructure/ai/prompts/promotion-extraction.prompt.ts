@@ -6,23 +6,38 @@ export class PromotionExtractionPrompt {
       {
         role: 'system',
         content:
-          'You extract structured promotion data from raw customer messages. Only answer with valid JSON matching the expected schema.',
+          'Você é um extrator de promoções. Leia a mensagem recebida e responda SEMPRE apenas com JSON válido (ou o literal null). Nunca explique, nunca envolva em markdown, nunca envie texto adicional.',
       },
       {
         role: 'user',
         content: `Message: """${message}"""
-                  Extract a promotion JSON with the following keys:
-                  name (string), currentPrice (number | null), previousPrice (number | null), currency (string | null), type (string such as coupon, product, service, bundle, membership, unknown), link (string | null), couponCodes (array of strings), description (string | null), expiresAt (ISO date string | null), tags (array of lowercase keywords describing the promotion such as ["games","tech"]).
+                  Retorne APENAS UMA das opções:
+                  1) Um objeto JSON com as chaves obrigatórias abaixo:
+                     {
+                       "name": string,
+                       "currentPrice": number | null,
+                       "previousPrice": number | null,
+                       "currency": string | null,
+                       "type": "coupon" | "product" | "service" | "bundle" | "membership" | "unknown",
+                       "link": string | null,
+                       "couponCodes": string[],
+                       "description": string | null,
+                       "expiresAt": string | null (ISO 8601),
+                       "tags": string[] (sempre minúsculas)
+                     }
+                  2) O literal null (sem aspas) caso não haja promoção.
 
-                  Important rules:
-                  - For coupon-only promotions without a specific final price, set currentPrice to null but ALWAYS provide a name describing the promotion/discount
-                  - For coupon codes, extract them into the couponCodes array (e.g., ["AMIGOPRIME2", "AMIGOPRIME3"])
-                  - Set type to "coupon" when the message is primarily about discount codes
-                  - Always include at least one tag when a promotion exists. Tags should be concise, lowercase, and reflect the product category or benefit
-                  - The description must always be in Portuguese (pt-BR) and should include any discount information mentioned
-                  - For currency, always use the symbol format (e.g., "R$" for Brazilian Real, "$" for Dollar) instead of ISO codes (e.g., avoid "BRL", "USD")
-                  
-                  If no promotion data exists, respond with the literal string null.`,
+                  Regras cruciais:
+                  - Responda sempre com JSON bruto, sem markdown, sem texto antes ou depois.
+                  - Quando houver mais de uma promoção, escolha a mais relevante (maior desconto ou primeira citada) e mencione as demais dentro da descrição usando o formato "Ofertas adicionais: ..." em português.
+                  - A descrição deve estar em pt-BR e incluir valores, benefícios e complementos relevantes.
+                  - Sempre forneça um nome claro, mesmo para cupons sem preço final; nesses casos mantenha currentPrice como null.
+                  - Mantenha currency no formato de símbolo (ex.: "R$", "$"), usando null quando não houver preço.
+                  - Sempre retorne um array para couponCodes e tags; se não houver itens utilize [].
+                  - As tags devem ser curtas, minúsculas e refletir a categoria (ex.: ["tech","tv"]).
+                  - Nunca invente valores ou códigos inexistentes; use apenas o que estiver na mensagem.
+
+                  Lembre-se: saída = JSON puro ou null literal.`,
       },
     ];
   }

@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { ReceiveMessageUseCase } from '@application/use-cases/receive-message.use-case';
 import { EasyWhatsApp } from 'easy-whatsapp-lib';
 import { Message } from 'easy-whatsapp-lib/lib/cjs/types/message';
+import { File } from '@app/domain/messaging/file.interface';
 
 @Injectable()
 export class EasyWhatsAppService implements OnModuleInit {
@@ -36,9 +37,12 @@ export class EasyWhatsAppService implements OnModuleInit {
         return;
       }
 
+      const imagePayload = this.extractImagePayload(message);
+
       await this.receiveMessageUseCase.execute({
         from: message.group || message.phone,
         message: textPayload,
+        image: imagePayload,
       });
     } catch (error) {
       this.logger.error(
@@ -54,6 +58,26 @@ export class EasyWhatsAppService implements OnModuleInit {
     }
 
     return this.sanitizeText(message.message);
+  }
+
+  private extractImagePayload(message: Message): File | undefined {
+    if (message.type !== 'image' || !message.data) {
+      return undefined;
+    }
+
+    return {
+      data: message.data,
+      mimetype: message.mimetype || undefined,
+      filename: this.buildImageFilename(message),
+    };
+  }
+
+  private buildImageFilename(message: Message): string | undefined {
+    if (!message.messageTimestamp) {
+      return undefined;
+    }
+
+    return `whatsapp-${message.messageTimestamp}.jpg`;
   }
 
   private sanitizeText(rawText?: string): string | null {

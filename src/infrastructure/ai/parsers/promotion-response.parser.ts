@@ -31,13 +31,13 @@ export class PromotionResponseParser extends BaseAiResponseParser<PromotionPaylo
 
   private parsePayload(raw: string): PromotionPayload | null {
     const parsed = this.extractJson(raw);
+    const candidate = this.pickCandidate(parsed);
 
-    if (!parsed || !this.isObject(parsed)) {
+    if (!candidate || !this.isObject(candidate)) {
       this.logger.debug('Failed to extract valid JSON from AI response');
       return null;
     }
 
-    const candidate = parsed as PromotionCandidate;
     this.logger.debug(
       `Parsing promotion candidate: ${JSON.stringify(candidate)}`,
     );
@@ -77,5 +77,47 @@ export class PromotionResponseParser extends BaseAiResponseParser<PromotionPaylo
     );
 
     return promotion;
+  }
+
+  private pickCandidate(payload: unknown): PromotionCandidate | null {
+    if (!payload) {
+      return null;
+    }
+
+    if (this.isObject(payload)) {
+      return payload as PromotionCandidate;
+    }
+
+    if (!Array.isArray(payload)) {
+      return null;
+    }
+
+    for (const entry of payload) {
+      if (!this.isObject(entry)) {
+        continue;
+      }
+
+      const candidate = entry as PromotionCandidate;
+      const hasName = Boolean(candidate.name);
+      const hasPrice = this.toNumber(candidate.currentPrice) !== undefined;
+      const hasCoupons = this.toStringArray(
+        candidate.couponCodes ?? candidate.couponCode ?? candidate.coupon,
+      ).length;
+
+      if (hasName && (hasPrice || hasCoupons)) {
+        this.logger.debug('Selected promotion candidate from AI array');
+        return candidate;
+      }
+    }
+
+    const fallback = payload.find((entry): entry is PromotionCandidate =>
+      this.isObject(entry),
+    );
+
+    if (fallback) {
+      this.logger.debug('Falling back to first object in AI array response');
+    }
+
+    return fallback ?? null;
   }
 }

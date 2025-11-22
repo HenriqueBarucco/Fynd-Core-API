@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
 import { Logger } from '@nestjs/common';
 import type { ChatCompletion } from 'openai/resources/chat/completions';
 
@@ -22,25 +23,81 @@ export abstract class BaseAiResponseParser<T> {
       return null;
     }
 
-    let content = raw.replace(/```json\n?|\n?```/g, '').trim();
-    content = content.replace(/```\n?|\n?```/g, '').trim();
+    const sanitized = raw
+      .replace(/```json\n?|\n?```/g, '')
+      .replace(/```\n?|\n?```/g, '')
+      .trim();
 
-    const jsonStart = content.indexOf('{');
-    const jsonEnd = content.lastIndexOf('}');
+    return (
+      this.tryParseJson(sanitized) ??
+      this.extractStructuredJson(sanitized, '{') ??
+      this.extractStructuredJson(sanitized, '[')
+    );
+  }
 
-    if (jsonStart === -1 || jsonEnd === -1) {
+  private tryParseJson(content: string): unknown | null {
+    if (!content.length) {
       return null;
     }
 
     try {
-      const sliced = content.slice(jsonStart, jsonEnd + 1);
-      return JSON.parse(sliced) as unknown;
+      return JSON.parse(content) as unknown;
     } catch (error) {
       this.logger.debug('Failed to parse JSON response', {
         error: error instanceof Error ? error.message : String(error),
       });
       return null;
     }
+  }
+
+  private extractStructuredJson(
+    content: string,
+    opening: '{' | '[',
+  ): unknown | null {
+    const closing = opening === '{' ? '}' : ']';
+    const start = content.indexOf(opening);
+
+    if (start === -1) {
+      return null;
+    }
+
+    const sliced = this.sliceBalanced(content, start, opening, closing);
+    return sliced ? this.tryParseJson(sliced) : null;
+  }
+
+  private sliceBalanced(
+    content: string,
+    start: number,
+    opening: string,
+    closing: string,
+  ): string | null {
+    let depth = 0;
+    let inString = false;
+    let previous = '';
+
+    for (let index = start; index < content.length; index += 1) {
+      const char = content[index];
+
+      if (char === '"' && previous !== '\\') {
+        inString = !inString;
+      }
+
+      if (!inString) {
+        if (char === opening) {
+          depth += 1;
+        } else if (char === closing) {
+          depth -= 1;
+
+          if (depth === 0) {
+            return content.slice(start, index + 1);
+          }
+        }
+      }
+
+      previous = char;
+    }
+
+    return null;
   }
 
   protected toNumber(value: unknown): number | undefined {
@@ -68,6 +125,6 @@ export abstract class BaseAiResponseParser<T> {
   }
 
   protected isObject(value: unknown): value is Record<string, unknown> {
-    return typeof value === 'object' && value !== null;
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
   }
 }

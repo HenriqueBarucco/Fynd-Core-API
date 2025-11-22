@@ -40,7 +40,7 @@ importers:
         version: 0.44.7(pg@8.16.3)
       easy-whatsapp-lib:
         specifier: github:HenriqueBarucco/Easy-WhatsApp-Lib
-        version: https://codeload.github.com/HenriqueBarucco/Easy-WhatsApp-Lib/tar.gz/02e1b6980822f3ecfbe6f176dfa54fbc42239298
+        version: https://codeload.github.com/HenriqueBarucco/Easy-WhatsApp-Lib/tar.gz/cb19b8a60a1f16566daffaebd6e30b46609015a2
       openai:
         specifier: ^6.9.1
         version: 6.9.1(zod@4.1.12)
@@ -2035,9 +2035,9 @@ packages:
   eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
 
-  easy-whatsapp-lib@https://codeload.github.com/HenriqueBarucco/Easy-WhatsApp-Lib/tar.gz/02e1b6980822f3ecfbe6f176dfa54fbc42239298:
-    resolution: {tarball: https://codeload.github.com/HenriqueBarucco/Easy-WhatsApp-Lib/tar.gz/02e1b6980822f3ecfbe6f176dfa54fbc42239298}
-    version: 1.2.0
+  easy-whatsapp-lib@https://codeload.github.com/HenriqueBarucco/Easy-WhatsApp-Lib/tar.gz/cb19b8a60a1f16566daffaebd6e30b46609015a2:
+    resolution: {tarball: https://codeload.github.com/HenriqueBarucco/Easy-WhatsApp-Lib/tar.gz/cb19b8a60a1f16566daffaebd6e30b46609015a2}
+    version: 1.3.0
 
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
@@ -5616,7 +5616,7 @@ snapshots:
 
   eastasianwidth@0.2.0: {}
 
-  easy-whatsapp-lib@https://codeload.github.com/HenriqueBarucco/Easy-WhatsApp-Lib/tar.gz/02e1b6980822f3ecfbe6f176dfa54fbc42239298:
+  easy-whatsapp-lib@https://codeload.github.com/HenriqueBarucco/Easy-WhatsApp-Lib/tar.gz/cb19b8a60a1f16566daffaebd6e30b46609015a2:
     dependencies:
       '@types/socket.io-client': 3.0.0
       dotenv: 16.6.1

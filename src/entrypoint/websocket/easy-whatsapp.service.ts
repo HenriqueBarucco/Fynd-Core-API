@@ -33,7 +33,7 @@ export class EasyWhatsAppService implements OnModuleInit {
       const textPayload = this.extractTextPayload(message);
 
       if (!textPayload) {
-        this.logger.warn('Ignoring message without textual content');
+        this.logger.warn('Ignoring message without textual content', message);
         return;
       }
 

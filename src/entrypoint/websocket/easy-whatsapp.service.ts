@@ -66,7 +66,7 @@ export class EasyWhatsAppService implements OnModuleInit {
     }
 
     return {
-      data: message.data,
+      data: message.data || '',
       mimetype: message.mimetype || undefined,
       filename: this.buildImageFilename(message),
     };

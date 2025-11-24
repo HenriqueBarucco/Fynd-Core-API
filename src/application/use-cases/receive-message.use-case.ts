@@ -38,12 +38,14 @@ export class ReceiveMessageUseCase
 
     const promotion = await this.promotionService.extractPromotion(message);
     if (!promotion) {
-      this.logger.log(`No promotion detected in group ${group.id}`);
+      this.logger.log(
+        `No promotion detected in group ${group.id} (${group.description})`,
+      );
       return;
     }
 
     this.logger.log(
-      `Detected promotion "${promotion.name}" (${promotion.type}) with tags: ${promotion.tags.join(', ')}`,
+      `Detected promotion "${promotion.name}" (${promotion.type}) with tags: ${promotion.tags.join(', ')} - ${group.description}`,
     );
 
     const interestedUsers =
